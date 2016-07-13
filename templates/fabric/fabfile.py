@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# create by https://github.com/jeremaihloo/fabric-gengerator.git at { .CreateAt }
+# create by https://github.com/Jeremaihloo/megenerator at {{ .CreateAt }}
 
 __author__ = 'Jeremaihloo'
 
