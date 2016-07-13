@@ -34,9 +34,9 @@ func main() {
 	meta := make(map[string]interface{})
 	meta["CreateAt"] = time.Now()
 	meta["Name"] = os.Args[1]
-	jsonMetaData, _ := ioutil.ReadFile(repPath + "/template/" + os.Args[1] + "/meta.json")
+	jsonMetaData, _ := ioutil.ReadFile(repPath + "/templates/" + os.Args[1] + "/meta.json")
 	json.Unmarshal(jsonMetaData, &meta)
-	tplSrc, _ := ioutil.ReadFile(repPath + "/template/" + os.Args[1] + "/" + meta["Template"].(string))
+	tplSrc, _ := ioutil.ReadFile(repPath + "/templates/" + os.Args[1] + "/" + meta["Template"].(string))
 	t, err := template.New("template").Parse(string(tplSrc))
 	if err != nil {
 		fmt.Println(err.Error())
