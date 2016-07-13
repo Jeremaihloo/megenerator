@@ -71,6 +71,7 @@ func TplInit() {
 		// git clone
 		cmd := exec.Command("git", "clone", "https://github.com/Jeremaihloo/megenerator")
 		cmd.Dir = u.HomeDir
+		cmd.Stdout = os.Stdout
 		if errCmd := cmd.Run(); errCmd != nil {
 			fmt.Println(errCmd.Error())
 		}
@@ -82,6 +83,7 @@ func TplInit() {
 func TplPull() {
 	cmd := exec.Command("git", "pull")
 	cmd.Dir = repPath
+	cmd.Stdout = os.Stdout
 	cmd.Run()
 }
 
