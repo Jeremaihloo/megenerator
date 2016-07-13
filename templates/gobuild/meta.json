@@ -1,0 +1,4 @@
+{
+    "Template":"gobuild.sh",
+    "Export":"build.sh"
+}
