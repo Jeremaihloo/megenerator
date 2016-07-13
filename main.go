@@ -20,13 +20,15 @@ func main() {
 
 	// .megenerator check
 	u, _ := user.Current()
-	repPath := u.HomeDir + ".megenerator"
+	repPath := u.HomeDir + "/.megenerator"
 	if os.Args[1] == "initpl" {
 		_, err := os.Stat(repPath)
 		if err != nil {
 			// git clone
-			exec.Command("git", "clone", "https://github.com/jeremaihloo/menegerator.git").Run()
+			exec.Command("git", "clone", "https://github.com/Jeremaihloo/megenerator").Run()
+			fmt.Println("git clone https://github.com/Jeremaihloo/megenerator")
 			exec.Command("mv", "megenerator", repPath).Run()
+			fmt.Printf("mv menegerator %s\n", u.HomeDir)
 		}
 		return
 	}
@@ -34,7 +36,9 @@ func main() {
 	meta := make(map[string]interface{})
 	meta["CreateAt"] = time.Now()
 	meta["Name"] = os.Args[1]
-	jsonMetaData, _ := ioutil.ReadFile(repPath + "/templates/" + os.Args[1] + "/meta.json")
+	metaUri := repPath + "/templates/" + os.Args[1] + "/meta.json"
+	fmt.Println(metaUri)
+	jsonMetaData, _ := ioutil.ReadFile(metaUri)
 	json.Unmarshal(jsonMetaData, &meta)
 	tplSrc, _ := ioutil.ReadFile(repPath + "/templates/" + os.Args[1] + "/" + meta["Template"].(string))
 	t, err := template.New("template").Parse(string(tplSrc))

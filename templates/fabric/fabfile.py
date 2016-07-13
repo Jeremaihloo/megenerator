@@ -20,11 +20,11 @@ env.hosts = ['172.16.30.214']
 db_user = 'root'
 db_password = 'root'
 
-_TAR_FILE = 'dist-{ .Name }.tar.gz'
+_TAR_FILE = 'dist-{{ .Name }}.tar.gz'
 
 _REMOTE_TMP_TAR = '/tmp/%s' % _TAR_FILE
 
-_REMOTE_BASE_DIR = '/gench/apps/{ .Name }'
+_REMOTE_BASE_DIR = '/gench/apps/{{ .Name }}'
 
 def _current_path():
     return os.path.abspath('.')
@@ -37,9 +37,9 @@ def backup():
     Dump entire database on server and backup to local.
     '''
     dt = _now()
-    f = 'backup-{ .Name }-%s.sql' % dt
+    f = 'backup-{{ .Name }}-%s.sql' % dt
     with cd('/tmp'):
-        run('mysqldump --user=%s --password=%s --skip-opt --add-drop-table --default-character-set=utf8 --quick { .Name } > %s' % (db_user, db_password, f))
+        run('mysqldump --user=%s --password=%s --skip-opt --add-drop-table --default-character-set=utf8 --quick {{ .Name }} > %s' % (db_user, db_password, f))
         run('tar -czvf %s.tar.gz %s' % (f, f))
         get('%s.tar.gz' % f, '%s/backup/' % _current_path())
         run('rm -f %s' % f)
@@ -78,8 +78,8 @@ def deploy():
         sudo('chown www-data:www-data www')
         sudo('chown -R www-data:www-data %s' % newdir)
     with settings(warn_only=True):
-        sudo('supervisorctl stop { .Name }')
-        sudo('supervisorctl start { .Name }')
+        sudo('supervisorctl stop {{ .Name }}')
+        sudo('supervisorctl start {{ .Name }}')
         sudo('/etc/init.d/nginx reload')
 
 RE_FILES = re.compile('\r?\n')
@@ -126,8 +126,8 @@ def rollback():
         sudo('ln -s %s www' % old)
         sudo('chown www-data:www-data www')
         with settings(warn_only=True):
-            sudo('supervisorctl stop { .Name }')
-            sudo('supervisorctl start { .Name }')
+            sudo('supervisorctl stop {{ .Name }}')
+            sudo('supervisorctl start {{ .Name }}')
             sudo('/etc/init.d/nginx reload')
         print ('ROLLBACKED OK.')
 
@@ -163,14 +163,14 @@ def restore2local():
     print ('Start restore to local database...')
     p = raw_input('Input mysql root password: ')
     sqls = [
-        'drop database if exists { .Name };',
-        'create database { .Name };',
-        'grant select, insert, update, delete on { .Name }.* to \'%s\'@\'localhost\' identified by \'%s\';' % (db_user, db_password)
+        'drop database if exists {{ .Name }};',
+        'create database {{ .Name }};',
+        'grant select, insert, update, delete on {{ .Name }}.* to \'%s\'@\'localhost\' identified by \'%s\';' % (db_user, db_password)
     ]
     for sql in sqls:
         local(r'mysql -uroot -p%s -e "%s"' % (p, sql))
     with lcd(backup_dir):
         local('tar zxvf %s' % restore_file)
-    local(r'mysql -uroot -p%s { .Name } < backup/%s' % (p, restore_file[:-7]))
+    local(r'mysql -uroot -p%s {{ .Name }} < backup/%s' % (p, restore_file[:-7]))
     with lcd(backup_dir):
         local('rm -f %s' % restore_file[:-7])
