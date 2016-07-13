@@ -58,11 +58,10 @@ def package():
     includes = ['dist/linux']
     excludes = ['tests', '.*', '*.log']
     local('rm -f dist/%s' % _TAR_FILE)
-    with lcd(os.path.join(_current_path(), 'www')):
-        cmd = ['tar', '--dereference', '-czvf', 'dist/%s' % _TAR_FILE]
-        cmd.extend(['--exclude=\'%s\'' % ex for ex in excludes])
-        cmd.extend(includes)
-        local(' '.join(cmd))
+    cmd = ['tar', '--dereference', '-czvf', 'dist/%s' % _TAR_FILE]
+    cmd.extend(['--exclude=\'%s\'' % ex for ex in excludes])
+    cmd.extend(includes)
+    local(' '.join(cmd))
 
 def deploy():
     newdir = 'www-%s' % _now()
