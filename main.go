@@ -5,9 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"os/user"
+	"path/filepath"
+	"strings"
 	"text/template"
 	"time"
 )
@@ -42,7 +45,13 @@ func main() {
 		Init(os.Args[2])
 		break
 	default:
-		Generate(os.Args[1], os.Args[2])
+		name := ""
+		if len(os.Args) < 3 {
+			name = getCurrentDirectory()
+		} else {
+			name = os.Args[2]
+		}
+		Generate(os.Args[1], name)
 		break
 	}
 
@@ -118,4 +127,12 @@ func Generate(templateName, name string) {
 		fmt.Println(err.Error())
 	}
 	fmt.Println("ok!")
+}
+
+func getCurrentDirectory() string {
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return strings.Replace(dir, "\\", "/", -1)
 }
