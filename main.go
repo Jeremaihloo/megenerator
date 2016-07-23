@@ -30,7 +30,7 @@ var repPath string
 
 func init() {
 	u, _ = user.Current()
-	repPath = u.HomeDir + "/.megenerator"
+	repPath = u.HomeDir + "/.metoo"
 
 }
 
@@ -78,7 +78,7 @@ func TplInit() {
 	_, err := os.Stat(repPath)
 	if err != nil {
 		// git clone
-		cmd := exec.Command("git", "clone", "https://github.com/Jeremaihloo/megenerator")
+		cmd := exec.Command("git", "clone", "https://github.com/Jeremaihloo/metoo")
 		cmd.Dir = u.HomeDir
 		cmd.Stdout = os.Stdout
 		if errCmd := cmd.Run(); errCmd != nil {
@@ -119,7 +119,7 @@ func Generate(templateName, name string) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Printf(string(w1.Bytes()))
+	fmt.Printf("..." + string(w1.Bytes()))
 	json.Unmarshal(w1.Bytes(), &meta)
 
 	tplSrc, _ := ioutil.ReadFile(repPath + "/templates/" + templateName + "/" + meta["Template"].(string))
