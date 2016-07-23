@@ -1,0 +1,4 @@
+{
+    "Template":"sup.conf",
+    "Export":"{{ .Name }}.conf"
+}

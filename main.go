@@ -47,7 +47,7 @@ func main() {
 	default:
 		name := ""
 		if len(os.Args) < 3 {
-			name = getCurrentDirectory()
+			name = getCurrentDirectoryName()
 		} else {
 			name = os.Args[2]
 		}
@@ -108,9 +108,20 @@ func Generate(templateName, name string) {
 	meta["CreateAt"] = time.Now()
 	meta["Name"] = name
 	metaUri := repPath + "/templates/" + templateName + "/meta.json"
-	fmt.Println(metaUri)
 	jsonMetaData, _ := ioutil.ReadFile(metaUri)
-	json.Unmarshal(jsonMetaData, &meta)
+	t1, err := template.New("meta").Parse(string(jsonMetaData))
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	var bs1 []byte
+	w1 := bytes.NewBuffer(bs1)
+	err = t1.Execute(w1, meta)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Printf(string(w1.Bytes()))
+	json.Unmarshal(w1.Bytes(), &meta)
+
 	tplSrc, _ := ioutil.ReadFile(repPath + "/templates/" + templateName + "/" + meta["Template"].(string))
 	t, err := template.New("template").Parse(string(tplSrc))
 	if err != nil {
@@ -135,4 +146,9 @@ func getCurrentDirectory() string {
 		log.Fatal(err)
 	}
 	return strings.Replace(dir, "\\", "/", -1)
+}
+
+func getCurrentDirectoryName() string {
+	arr := strings.Split(getCurrentDirectory(), "/")
+	return arr[len(arr)-1]
 }
