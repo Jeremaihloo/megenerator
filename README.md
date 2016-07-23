@@ -11,7 +11,9 @@ Usage :
 TODO
 to be a tool install cli like npm
 
+```
 metoo install npm jquery
 metoo install just http://github.com/jeremaihloo/like.sh
 metoo install just http://github.com/jeremaihloo/dislike.py
 metoo install go http://github.com/jeremaihloo/looklike
+```
