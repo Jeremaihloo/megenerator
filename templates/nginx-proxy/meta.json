@@ -1,0 +1,4 @@
+{
+    "Template":"proxy",
+    "Export":"{{ .Name }}"
+}
